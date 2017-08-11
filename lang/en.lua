@@ -41,6 +41,8 @@ L.Settings_Ultimate_Description                      = "This feature allows you 
 -- Settings 
 L.Settings_Ultimate_Enabled                          = "Enabled"
 L.Settings_Ultimate_Enabled_TT                       = "Enable the sharing and receiving of ultimate values. It is always disabled outside of trials."
+L.Settings_Ultimate_Timers			     = "Enable Timers"
+L.Settings_Ultimate_Timers_TT			     = "Enable timers for each shared ultimate. It shows you the average timer when ultimate will be ready."
 L.Settings_Ultimate_Hidden                           = "Hidden"
 L.Settings_Ultimate_Hidden_TT                        = "Hides the ultimate window but does not disable the feature itself."
 L.Settings_Ultimate_UseColor                         = "Use Color"

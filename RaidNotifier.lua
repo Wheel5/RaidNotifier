@@ -189,9 +189,43 @@ do ----------------------
 	local ultimateAbilityId = 46537  --Aggressive Warhorn Rank IV
 	local ultimates = {}
 
+	function RaidNotifier.GetUltimates()
+		return ultimates
+	end
+
 	function RaidNotifier.OnUltimateReceived(unitTag, ultimateCurrent, ultimateCost, isSelf)
 		local self     = RaidNotifier
 		local userName = GetUnitDisplayName(unitTag)
+
+		local ultTimeData = nil
+
+		if (self:IsDevMode() and settings.timers) then
+			local now = GetTimeStamp()
+			local currentPercent = (ultimateCurrent / ultimateCost) * 100
+			local userUltimate = ultimates[userName]
+			ultTimeData = userUltimate and userUltimate.ultTimeData and userUltimate.ultTimeData or nil
+			local timeDiff = ultTimeData and ultTimeData.time > 0 and now - ultTimeData.time or 0
+
+			if userUltimate and currentPercent < 100 and IsUnitInCombat(unitTag) and (not ultTimeData or timeDiff > 10) then -- every 10 secs or on start
+				if not ultTimeData then
+					ulTimeData = {lastTime = 0, time = 0, expectedUltTime = 0, samplesCount = 0, lastPercent = 0}
+				end
+				local diffPercent = timeDiff > 0 and currentPercent >= ultTimeData.lastPercent and currentPercent - ultTimeData.lastPercent or 0
+				local ultTime = diffPercent > 0 and (100 * timeDiff / diffPercent) or ultTimeData.expectedUltTime
+				ultTime = math.ceil((ultTime + ultTimeData.expectedUltTime * ultTimeData.samplesCount) / (ultTimeData.samplesCount + 1))
+			end
+
+			ultTimeData =
+			{
+				lastTime = ultTimeData.time,
+				time = now,
+				expectedUltTime = ultTime,
+				-- use 2 samples to calculate average expected ultimate time
+				samplesCount = ultTimeData.expectedUltTime > 0 and ultTimeData.samplesCount < 2 and ultTimeData.samplesCount + 1 or ultTimeData.samplesCount,
+				lastPercent = userUltimate.percent
+			}
+		end
+
 		ultimates[userName] = 
 		{
 			userName = userName,
@@ -199,6 +233,7 @@ do ----------------------
 			roles    = {GetGroupMemberRoles(unitTag)},
 			current  = ultimateCurrent,
 			percent  = math.floor((ultimateCurrent / ultimateCost) * 100), --round it down?
+			ultTimeData = ultTimeData
 		}
 		self:UpdateUltimates()
 	end
@@ -210,16 +245,30 @@ do ----------------------
 		window = window or UI.GetElement("ultimate", "ulti_window")
 		if not window then return end
 
+		local numSupport = 0
+		local nextUltTime = 0
 		local sortedUlti = {}
 		for userName, data in pairs(ultimates) do
-			local r1,r2,r3 = unpack(data.roles)
-			if (r1 and settings.showDps or r2 and settings.showHealers or r3 and settings.showTanks) then
+			local dps, heal, tank = unpack(data.roles)
+			if (self:IsDevMode() and settings.timers and (heal or tank)) then
+				numSupport = numSupport + 1
+				nextUltTime = nextUltTime + (data.ultTimeData and data.ultTimeData.expectedUltTime or 0)
+			end
+			if (dps and settings.showDps or heal and settings.showHealers or tank and settings.showTanks) then
 				table.insert(sortedUlti, data)
 			end
 		end
+		if numSupport > 0 then
+			nextUltTime = nextUltTime / numSupport -- average ultimate time per user
+		end
 		table.sort(sortedUlti, function(a, b) return a.percent > b.percent end)
 		
-		local text = "Ultimates:" --TODO: grab text from abilityId??
+		local text = ""
+		if nextUltTime > 0 then
+			text = string.format("Ultimates (%ds):", nextUltTime / numSupport)
+		else
+			text = "Ultimates:" --TODO: grab text from abilityId??
+		end
 		for i, data in ipairs(sortedUlti) do
 			local name = data.userName
 			local c1,c2 = "",""
@@ -230,7 +279,12 @@ do ----------------------
 					c1,c2 = "|ccccc00","|r"
 				end
 			end
-			text = string.format("%s\n%s%s %d%%%s", text, c1, name, zo_min(data.percent, 100), c2)
+			if data.ultTimeData and data.ultTimeData.expectedUltTime > 0 and data.ultTimeData.time > 0 then
+				local timeToNextHorn = math.ceil((100 - data.percent) * data.ultTimeData.expectedUltTime / 100)
+				text = string.format("%s\n%s%s %d%%%s | %ds/%ds", text, c1, name, math.floor(data.percent), c2, timeToNextHorn > 0 and timeToNextHorn or 0, data.ultTimeData.expectedUltTime)
+			else
+				text = string.format("%s\n%s%s %d%%%s", text, c1, name, math.floor(data.percent), c2)
+			end
 		end
 
 		window.label:SetText(text)

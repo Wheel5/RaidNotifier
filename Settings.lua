@@ -154,6 +154,7 @@ do ------------------
 			showDps         = false,
 			ulti_window     = {100, 600},
 			override_cost   = 0,
+			timers		= false,
 		},
 		sounds = {
 		},
@@ -574,6 +575,18 @@ function RaidNotifier:CreateSettingsMenu()
 			end,
 		default = false,
 	})
+        MakeControlEntry({
+                type = "checkbox",
+                name = RAIDNOTIFIER_SETTINGS_ULTIMATE_TIMERS,
+                tooltip = RAIDNOTIFIER_SETTINGS_ULTIMATE_TIMERS_TT,
+                getFunc = function() return savedVars.ultimate.timers end,
+                setFunc = function(value)
+                                savedVars.ultimate.timers = value
+                        end,
+                default = false,
+		disabled = function() return not self:IsDevMode() or not savedVars.ultimate.enabled end,
+		warning = RAIDNOTIFIER_SETTINGS_DEBUG_DEVMODE_WARNING,
+        })	
 	MakeControlEntry({
 		type = "checkbox",
 		name = RAIDNOTIFIER_SETTINGS_ULTIMATE_USECOLOR,
