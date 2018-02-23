@@ -403,3 +403,9 @@ asylum.interest_list[101354] = true
 asylum.interest_list[64508] = true 
 
 RaidNotifier.BuffsDebuffs[RAID_ASYLUM_SANCTORIUM] = asylum
+
+local scalecaller = {}
+scalecaller.zaan_dragons_fury = 99670 -- 2200
+scalecaller.zaan_infernos_hold = 99723 -- 2200
+RaidNotifier.BuffsDebuffs[DUNG_SCALECALLER_PEAK] = scalecaller
+

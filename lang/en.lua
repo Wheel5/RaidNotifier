@@ -403,6 +403,20 @@ L.Alerts_Asylum_Protector_Spawn                  = "|c0000FFProtector|r spawning
 L.Alerts_Asylum_Protector_Active                 = "|c0000FFProtector|r active!"
 
 
+--------------------------------
+------   Scalecaller Peakm  ----
+--------------------------------
+L.Settings_Scalecaller_Header                    = "Scalecaller Peak"
+-- Settings
+L.Settings_Scalecaller_Dragons_Fury              = "Zaan: Dragon's Fury"
+L.Settings_Scalecaller_Dragons_Fury_TT           = "Alerts you when Zaan is targeting Fire on one player. Player has to avoid this fire."
+L.Settings_Scalecaller_Infernos_Hold             = "Zaan: Inferno's Hold"
+L.Settings_Scalecaller_Infernos_Hold_TT          = "Alerts you when Zaan is about to stun one player and cast inferno on that player. Somone has to block it."
+-- Alerts
+L.Alerts_Scalecaller_Dragons_Fury                = "Incoming |cFF0000Dragon's Fury|r on you! Kite!"
+L.Alerts_Scalecaller_Dragons_Fury_Other          = "|cFF0000Dragon's Fury|r at |cFC0000<<!aC:1>>|r"
+L.Alerts_Scalecaller_Infernos_Hold		 = "Incoming |cFF0000Inferno's Hold|r on you!"
+L.Alerts_Scalecaller_Infernos_Hold_Other         = "|cFF0000Inferno's Hold|r at |cFC0000<<!ac:1>>|r"
 
 --------------------------------
 ----       Debugging        ----

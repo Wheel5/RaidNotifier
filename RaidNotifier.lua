@@ -5,7 +5,7 @@ local RaidNotifier = RaidNotifier
 
 RaidNotifier.Name            = "RaidNotifier"
 RaidNotifier.DisplayName     = "Raid Notifier"
-RaidNotifier.Version         = "2.3.11"
+RaidNotifier.Version         = "2.3.11.1"
 RaidNotifier.Author          = "|c009ad6Kyoma, Memus, Woeler, silentgecko|r"
 RaidNotifier.SV_Name         = "RNVars"
 RaidNotifier.SV_Version      = 4
@@ -19,6 +19,7 @@ RAID_MAW_OF_LORKHAJ        = 5
 RAID_MAELSTROM_ARENA       = 6
 RAID_HALLS_OF_FABRICATION  = 7
 RAID_ASYLUM_SANCTORIUM     = 8
+DUNG_SCALECALLER_PEAK	   = 99
 
 -- Debugging
 local function p() end
@@ -541,6 +542,7 @@ do ----------------------
 		[RAID_MAELSTROM_ARENA]       = 677,
 		[RAID_HALLS_OF_FABRICATION]  = 975,
 		[RAID_ASYLUM_SANCTORIUM]     = 1000,
+		[DUNG_SCALECALLER_PEAK]	     = 1010,
 	}
 
 	local RaidZones = {}
@@ -1744,6 +1746,36 @@ do ---------------------------
 		end
 	end
 
+        function RaidNotifier.OnCombatEvent_Dungs(_, result, isError, aName, aGraphic, aActionSlotType, sName, sType, tName, tType, hitValue, pType, dType, log, sUnitId, tUnitId, abilityId)
+		local raidId = RaidNotifier.raidId
+		local self   = RaidNotifier
+		local buffsDebuffs, settings = self.BuffsDebuffs[raidId], self.Vars.scalecaller
+
+		if (result == ACTION_RESULT_BEGIN) then
+			if abilityId == buffsDebuffs.zaan_dragons_fury then
+				if settings.zaan_dragons_fury >= 1 then
+					tName = UnitIdToString(tUnitId)
+					dbg("Dragon's Fury %s", tName)
+					if (tType == COMBAT_UNIT_TYPE_PLAYER) then
+						self:AddAnnouncement(GetString(RAIDNOTIFIER_ALERTS_SCALECALLER_DRAGONS_FURY), "scalecaller", "zaan_dragons_fury", 4)
+					elseif (tName ~= "" and settings.zaan_dragons_fury == 2) then
+						self:AddAnnouncement(zo_strformat(GetString(RAIDNOTIFIER_ALERTS_SCALECALLER_DRAGONS_FURY_OTHER), tName), "scalecaller", "zaan_dragons_fury", 4)
+					end
+				end
+			elseif abilityId == buffsDebuffs.zaan_infernos_hold then
+				if settings.zaan_infernos_hold >= 1 then
+					tName = UnitIdToString(tUnitId)
+					dbg("Inferno's Hold %s", tName)
+					if (tType == COMBAT_UNIT_TYPE_PLAYER) then
+						self:AddAnnouncement(GetString(RAIDNOTIFIER_ALERTS_SCALECALLER_INFERNOS_HOLD), "scalecaller", "zaan_infernos_hold")
+					elseif (tName ~= "" and settings.zaan_infernos_hold == 2) then
+						self:AddAnnouncement(zo_strformat(GetString(RAIDNOTIFIER_ALERTS_SCALECALLER_INFERNOS_HOLD_OTHER), tName), "scalecaller", "zaan_infernos_hold")
+					end
+				end
+			end
+		end
+	end
+
 
 	RaidNotifier.CombatEventCallbacks = 
 	{
@@ -1755,6 +1787,7 @@ do ---------------------------
 		[RAID_MAELSTROM_ARENA]       = RaidNotifier.OnCombatEvent_MA,
 		[RAID_HALLS_OF_FABRICATION]  = RaidNotifier.OnCombatEvent_HOF,
 		[RAID_ASYLUM_SANCTORIUM]     = RaidNotifier.OnCombatEvent_AS,
+		[DUNG_SCALECALLER_PEAK]	     = RaidNotifier.OnCombatEvent_Dungs,
 	}
 	
 	-------------------

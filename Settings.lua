@@ -248,6 +248,10 @@ do ------------------
 			olms_protector_spawn = true,
 			olms_trial_by_fire = true,
 		},
+		scalecaller = {
+			zaan_dragons_fury = 0,
+			zaan_infernos_hold = 0,
+		},
 		dbg = {
 			enable = false,
 			notify = false,
@@ -452,6 +456,10 @@ function RaidNotifier:CreateSettingsMenu()
 			llothis_defiling_blast = off_self_all, 
 			felms_teleport_strike = off_self_all,
 			olms_eruption = off_self_all,
+		},
+		scalecaller = {
+			zaan_dragons_fury = off_self_all,
+			zaan_infernos_hold = off_self_all,
 		},
 	}
 
@@ -1243,6 +1251,21 @@ function RaidNotifier:CreateSettingsMenu()
 	}, "asylum", "olms_trial_by_fire")
 	subTable = nil --end submenu
 
+	MakeSubmenu(L.Settings_Scalecaller_Header, "")
+	MakeControlEntry({
+		type = "dropdown",
+		name = L.Settings_Scalecaller_Dragons_Fury,
+		tooltip = L.Settings_Scalecaller_Dragons_Fury_TT,
+		choices = choices.scalecaller.zaan_dragons_fury,
+	}, "scalecaller", "zaan_dragons_fury")
+        MakeControlEntry({
+		type = "dropdown",
+		name = L.Settings_Scalecaller_Infernos_Hold,
+		tooltip = L.Settings_Scalecaller_Infernos_Hold_TT,
+		choices = choices.scalecaller.zaan_infernos_hold,
+	}, "scalecaller", "zaan_infernos_hold")
+	subTable = nil -- end submenu
+
 
 	MakeControlEntry({
 		type = "header",
@@ -1283,8 +1306,6 @@ function RaidNotifier:CreateSettingsMenu()
 		disabled = function() return not savedVars.dbg.tracker end,
 	})
 	subTable = nil --end submenu
-
-
 
 	self.optionsData = optionsTable
 	LAM:RegisterAddonPanel("RaidNotifierPanel", self.panelData)
