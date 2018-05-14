@@ -384,6 +384,7 @@ asylum.olms_gusts_of_steam = 98868 -- aoe under everyone's feet (jump starts)
 asylum.olms_eruption = 99974 -- jump
 asylum.olms_trial_by_fire = 98582
 asylum.olms_protector_spawn = 64508 -- aka find turret, better than 64489 due to its tUnitId
+asylum.olms_phasesHealth = {90, 75, 50, 25}
 asylum.olms_phase2 = 98615 -- after 90% health
 asylum.olms_phase3 = 98677 -- after 75% health
 asylum.olms_phase4 = 98678 -- after 50% health
@@ -408,4 +409,50 @@ local scalecaller = {}
 scalecaller.zaan_dragons_fury = 99670 -- 2200
 scalecaller.zaan_infernos_hold = 99723 -- 2200
 RaidNotifier.BuffsDebuffs[DUNG_SCALECALLER_PEAK] = scalecaller
+
+-- ------------------------------------------------------
+-- -- Cloudrest  ----------------------------------------
+-- -- ---------------------------------------------------
+local cloudrest = {}
+cloudrest.spn_yaghra = {}
+cloudrest.spn_yaghra[104430] = true
+cloudrest.spn_yaghra[104435] = true --
+cloudrest.spn_yaghra[104439] = true
+cloudrest.spn_yaghra[104440] = true
+cloudrest.spn_yaghra[104441] = true --
+cloudrest.spn_yaghra[104442] = true
+cloudrest.spn_yaghra[104443] = true
+
+-- Shade of Galenwe and Falarielle
+cloudrest.hoarfrost = 103760
+cloudrest.hoarfrost_syn = 103697
+cloudrest.hoarfrost_shed = 103714
+cloudrest.chilling_comet = 106374
+
+-- Shade of Siroria
+cloudrest.roaring_flare = 103531
+
+-- Shade of Relequen and Belanaril
+-- [2200] hitValue 3000 (noone)
+--cloudrest.voltaic_current = 103553
+-- [2245] hitValue 10000
+cloudrest.voltaic_current = 103895
+cloudrest.voltaic_current_delay = 3000
+-- overload [2240] hitValue 1, then [2245] hitValue 10000
+cloudrest.voltaic_overload = 87346 -- start and end
+cloudrest.voltaic_overload_progress = {}
+cloudrest.voltaic_overload_progress[109059] = true
+cloudrest.voltaic_overload_progress[109060] = true
+cloudrest.voltaic_overload_progress[109061] = true
+cloudrest.voltaic_overload_progress[109062] = true
+cloudrest.voltaic_overload_progress[109063] = true
+cloudrest.voltaic_overload_progress[109064] = true
+cloudrest.voltaic_overload_progress[109065] = true
+cloudrest.voltaic_overload_progress[109066] = true
+cloudrest.shadow_realm_cast = 103946 -- 2 seconds?
+cloudrest.nocturnals_favor = 104535 -- 2200 and 2250
+cloudrest.crushing_darkness = 105239 -- 2240
+cloudrest.sotDead_proj_to_corpse = 105120 -- [2250] T event after shadow is dead
+
+RaidNotifier.BuffsDebuffs[RAID_CLOUDREST] = cloudrest
 
